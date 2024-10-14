@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float playerSpeed;             //velocidade em que o jogador se move
     private Vector2 movementInput;                          //entrada de movimento
     private Vector2 movementDirection;                      //qual direçao x e y o jogador ira andar
+    [SerializeField] private float jumpForce = 10;
     
     void Start()
     {
@@ -22,6 +23,11 @@ public class PlayerController : MonoBehaviour
     {
         ReceiveInputs();
         PlayerMovement();
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            oRigidbody2D.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        }
     }
     
     private void ReceiveInputs()
