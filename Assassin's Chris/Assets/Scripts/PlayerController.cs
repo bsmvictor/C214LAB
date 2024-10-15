@@ -14,6 +14,10 @@ public class PlayerController : MonoBehaviour
     private Vector2 movementDirection;                      //qual direçao x e y o jogador ira andar
     [SerializeField] private float jumpForce = 10;
     
+    [Header("Player Limits")]
+    [SerializeField] private float maxX;
+    [SerializeField] private float minX;
+    
     void Start()
     {
         oRigidbody2D = GetComponent<Rigidbody2D>();
@@ -39,6 +43,10 @@ public class PlayerController : MonoBehaviour
     {
         //movimenta o jogador com base na direçao
         oRigidbody2D.velocity = movementInput * playerSpeed;
+
+        //limita movimentaçao d player
+        oRigidbody2D.position = new Vector2(Mathf.Clamp(oRigidbody2D.position.x, minX, maxX), oRigidbody2D.position.y);
+        
         
     }
     
