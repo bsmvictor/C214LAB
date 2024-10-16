@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 movementInput;                          //entrada de movimento
     private Vector2 movementDirection;                      //qual direçao jogador ira andar
     [SerializeField] private float jumpForce;
+    private bool canJump;
     
     [Header("Player Limits")]
     [SerializeField] private float maxX;
@@ -27,11 +28,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         PlayerMovement();
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            oRigidbody2D.velocity = new Vector2(oRigidbody2D.velocity.x, jumpForce);
-        }
+        
     }
     
     private void PlayerMovement()
@@ -39,13 +36,29 @@ public class PlayerController : MonoBehaviour
         // Armazena a direção que o jogador define
         oRigidbody2D.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * playerSpeed, oRigidbody2D.velocity.y);
         
-        
-
         //limita movimentaçao d player
         oRigidbody2D.position = new Vector2(Mathf.Clamp(oRigidbody2D.position.x, minX, maxX), oRigidbody2D.position.y);
         
-        
+        if (Input.GetKeyDown(KeyCode.Space) && canJump)
+        {
+            oRigidbody2D.velocity = new Vector2(oRigidbody2D.velocity.x, jumpForce);
+            canJump = false;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            canJump = true;
+        }
     }
     
-
+    private void OnCollisionExit2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            canJump = false;
+        }
+    }
 }
