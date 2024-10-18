@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     [Space]
     [Header("Booleans")]
     public bool canMove;
+    public bool canPunch;
     public bool isPunching;
     public bool isJumping;
     public bool onAir = false;
@@ -65,6 +66,11 @@ public class PlayerController : MonoBehaviour
 
         // Passa o valor da tecla pressionada para o método InputJump
         InputJump(isJumpKeyPressed);
+
+        bool isPunchKeyPressed = Input.GetButtonDown("Fire1");
+
+        InputPunch(isPunchKeyPressed);
+
     }
 
     private void PlayerMovement()
@@ -107,6 +113,7 @@ public class PlayerController : MonoBehaviour
     }
 
 
+
     public void Jump()
     {
         if (isJumping)
@@ -118,19 +125,30 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void InputPunch(bool isPunchKeyPressed)
+    {
+        if (isPunchKeyPressed && canPunch && !isPunching)
+        {
+            isPunching = true;
+        }
+    }
 
     private void Bater()
     {
-        if(Input.GetButtonDown("Fire1") && !isPunching){
-            if(!onAir){
-                oAnimator.SetTrigger("isPunching");
-                oRigidbody2D.velocity = new(0, oRigidbody2D.velocity.y);
-                StartCoroutine(IsPunching());
-            }else{
-                oAnimator.SetTrigger("isPunching"); //Mudar pra animção de airpunch
-                oRigidbody2D.velocity = Vector2.zero;
-                StartCoroutine(IsAirPunching());
-            }
+        if (isPunching)
+        {
+                if (!onAir)
+                {
+                    oAnimator.SetTrigger("isPunching");
+                    oRigidbody2D.velocity = new(0, oRigidbody2D.velocity.y);
+                    StartCoroutine(IsPunching());
+                }
+                else
+                {
+                    //oAnimator.SetTrigger("isPunching"); //Mudar pra animção de airpunch
+                    //oRigidbody2D.velocity = Vector2.zero;
+                    //StartCoroutine(IsAirPunching());
+                }
         }
     }
 
@@ -138,9 +156,11 @@ public class PlayerController : MonoBehaviour
     {
         canMove = false;
         isPunching = true;
+        canPunch = false;
         yield return new WaitForSeconds(oAnimator.GetCurrentAnimatorStateInfo(0).length);
         isPunching = false;
         canMove = true;
+        canPunch = true;
     }
 
     private IEnumerator IsAirPunching()
