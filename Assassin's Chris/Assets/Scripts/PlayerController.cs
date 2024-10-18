@@ -27,7 +27,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxX;
     [SerializeField] private float minX;
     [SerializeField] private float maxY;
-    
+
+    // métodos públicos para acesso e modificação
+    public void SetPlayerSpeed(float speed) => playerSpeed = speed;
+    public void SetMinX(float min) => minX = min;
+    public void SetMaxX(float max) => maxX = max;
+    public void SetJumpForce(float force) => jumpForce = force;
+
+    public float GetPlayerSpeed() => playerSpeed;
+    public float GetMinX() => minX;
+    public float GetMaxX() => maxX;
+    public float GetJumpForce() => jumpForce;
+
     void Start()
     {
         oRigidbody2D = GetComponent<Rigidbody2D>();
