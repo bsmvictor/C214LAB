@@ -20,23 +20,22 @@ public class PlayerControllerTests
 
         // Configura os parâmetros do PlayerController
         playerController.SetPlayerSpeed(5f);
-        playerController.SetXBounds(new(-10, 10));
-        playerController.SetYBounds(new(-10, 10));
+        playerController.SetXBounds(new Vector2(-10, 10));
+        playerController.SetYBounds(new Vector2(-10, 10));
         playerController.SetJumpForce(5f);
     }
 
-    //[Test]
-    //public void TestJump()
-    //{
-    //    // Arrange
-    //    float initialYPosition = player.transform.position.y;
-    //    float jumpForce = playerController.GetJumpForce();
+    [Test]
+    public void TestInputJump()
+    {
+        // Arrange
+        playerController.onAir = false;  // O jogador não está no ar
 
-    //    // Act
-    //    playerController.Jump();
+        // Act - Simula que a tecla de pulo foi pressionada
+        playerController.InputJump(true);
 
-    //    // Assert
-    //    Assert.Greater(player.transform.position.y, initialYPosition);
-    //    Assert.AreEqual(jumpForce, oRigidbody2D.velocity.y);
-    //}
+        // Assert
+        Assert.IsTrue(playerController.isJumping);  // Verifica se o jogador está pulando
+    }
+
 }

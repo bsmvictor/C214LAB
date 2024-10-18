@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     [Header("Booleans")]
     public bool canMove;
     public bool isPunching;
+    public bool isJumping;
     public bool onAir = false;
 
     // Setters
@@ -59,7 +60,11 @@ public class PlayerController : MonoBehaviour
             oRigidbody2D.velocity += Physics2D.gravity.y * Time.deltaTime * Vector2.up;
         }
 
+        // Verifica o input da tecla de pulo
+        bool isJumpKeyPressed = Input.GetKeyDown(KeyCode.Space);
 
+        // Passa o valor da tecla pressionada para o método InputJump
+        InputJump(isJumpKeyPressed);
     }
 
     private void PlayerMovement()
@@ -80,12 +85,7 @@ public class PlayerController : MonoBehaviour
         //limita movimentaçao do player
         oRigidbody2D.position = new Vector2(Mathf.Clamp(oRigidbody2D.position.x, X_bounds.x, X_bounds.y), oRigidbody2D.position.y);
 
-        if (Input.GetKeyDown(KeyCode.Space) && !onAir)
-        {
-            oRigidbody2D.velocity = new Vector2(oRigidbody2D.velocity.x, jumpForce);
-            onAir = true;
-            oAnimator.SetTrigger("isJumping");
-        }
+        Jump();
 
         //Espelhar
         if (horizontalInput > 0)
@@ -95,6 +95,26 @@ public class PlayerController : MonoBehaviour
         else if (horizontalInput < 0)
         {
             transform.localScale = new Vector3(-1f, 1f, 1f);
+        }
+    }
+
+    public void InputJump(bool isJumpKeyPressed)
+    {
+        if (isJumpKeyPressed && !onAir)
+        {
+            isJumping = true;
+        }
+    }
+
+
+    public void Jump()
+    {
+        if (isJumping)
+        {
+            oRigidbody2D.velocity = new Vector2(oRigidbody2D.velocity.x, jumpForce);
+            onAir = true;
+            oAnimator.SetTrigger("isJumping");
+            isJumping = false;
         }
     }
 
