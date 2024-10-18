@@ -5,39 +5,36 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("General References")]                          //headers para ajudar na organizaçao de variaveis do ponto de vista do unity
+    [HideInInspector]
     private Rigidbody2D oRigidbody2D;
     private Animator oAnimator;
 
-    [Header("Player Movement")]
-    [SerializeField] private float playerSpeed;             //velocidade em que o jogador se move
-    private Vector2 movementInput;                          //entrada de movimento
-    private Vector2 movementDirection;                      //qual direçao jogador ira andar
-    private float horizontalInput;                          //entrada horizontal do jogador
-    [SerializeField] private float jumpForce;
-    private bool canJump;
+    [Space]
+    [Header("Stats")]
+    public float playerSpeed = 10; 
+    public float jumpForce = 50;
+    public float fallMult = 1.5f;
+    public Vector2 X_bounds = new(-10,10);
+    public Vector2 Y_bounds = new(-10,10);
 
-    [Header("Player Punch")]
-    [SerializeField] private float tempoMaxEntreAtaques;
-    private float tempoAtualEntreAtaques;
-    private bool canPunch = true;
-    private bool isPunching = false;
+    [Space]
+    [Header("Booleans")]
+    public bool canMove;
+    public bool isPunching;
+    public bool onAir = false;
 
-    [Header("Player Limits")]
-    [SerializeField] private float maxX;
-    [SerializeField] private float minX;
-    [SerializeField] private float maxY;
-
-    // métodos públicos para acesso e modificação
+    // Setters
     public void SetPlayerSpeed(float speed) => playerSpeed = speed;
-    public void SetMinX(float min) => minX = min;
-    public void SetMaxX(float max) => maxX = max;
     public void SetJumpForce(float force) => jumpForce = force;
+    public void SetXBounds(Vector2 xBounds) => X_bounds = xBounds;
+    public void SetYBounds(Vector2 yBounds) => Y_bounds = yBounds;
+
+    //Getters
 
     public float GetPlayerSpeed() => playerSpeed;
-    public float GetMinX() => minX;
-    public float GetMaxX() => maxX;
     public float GetJumpForce() => jumpForce;
+    public Vector2 GetXBounds() => X_bounds;
+    public Vector2 GetYBounds() => Y_bounds;
 
     void Start()
     {
@@ -48,11 +45,18 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         Bater();
-        CronometroDeAtaque();
-
         if (!isPunching)
         {
             PlayerMovement();
+        }
+
+        if(oRigidbody2D.velocity.y < 0)
+        {
+            oRigidbody2D.velocity += Physics2D.gravity.y * fallMult * Time.deltaTime * Vector2.up;
+        }
+        else if(oRigidbody2D.velocity.y > 0 && !Input.GetButton("Jump"))
+        {
+            oRigidbody2D.velocity += Physics2D.gravity.y * Time.deltaTime * Vector2.up;
         }
 
 
@@ -60,11 +64,9 @@ public class PlayerController : MonoBehaviour
 
     private void PlayerMovement()
     {
-
-        EspelharPlayer();
         // Armazena a direção que o jogador define
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        oRigidbody2D.velocity = new Vector2(horizontalInput * playerSpeed, oRigidbody2D.velocity.y);
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+            oRigidbody2D.velocity = new Vector2(horizontalInput * playerSpeed, oRigidbody2D.velocity.y);
 
         if (horizontalInput == 0)
         {
@@ -76,74 +78,68 @@ public class PlayerController : MonoBehaviour
         }
 
         //limita movimentaçao do player
-        oRigidbody2D.position = new Vector2(Mathf.Clamp(oRigidbody2D.position.x, minX, maxX), oRigidbody2D.position.y);
+        oRigidbody2D.position = new Vector2(Mathf.Clamp(oRigidbody2D.position.x, X_bounds.x, X_bounds.y), oRigidbody2D.position.y);
 
-        if (Input.GetKeyDown(KeyCode.Space) && canJump)
+        if (Input.GetKeyDown(KeyCode.Space) && !onAir)
         {
             oRigidbody2D.velocity = new Vector2(oRigidbody2D.velocity.x, jumpForce);
-            canJump = false;
-
-            //animação de pulo
+            onAir = true;
             oAnimator.SetTrigger("isJumping");
         }
-    }
 
-    private void EspelharPlayer()
-    {
-
-        //se direita 
+        //Espelhar
         if (horizontalInput > 0)
         {
             transform.localScale = new Vector3(1f, 1f, 1f);
         }
-        //se esquerda
         else if (horizontalInput < 0)
         {
-            transform.localScale = new Vector3(-1f, 1f, 1f);    //alterando somente eixo x
+            transform.localScale = new Vector3(-1f, 1f, 1f);
         }
     }
+
 
     private void Bater()
     {
-        if (Input.GetButtonDown("Fire1") && canJump && canPunch && !isPunching)
-        {
-            oAnimator.SetTrigger("isPunching");
-            isPunching = true;
-            canPunch = false;
-
-            oRigidbody2D.velocity = Vector2.zero;
-
-            // Chame uma coroutine para esperar o tempo da animação de soco e liberar a movimentação novamente
-            StartCoroutine(ResetPunch());
-
+        if(Input.GetButtonDown("Fire1") && !isPunching){
+            if(!onAir){
+                oAnimator.SetTrigger("isPunching");
+                oRigidbody2D.velocity = new(0, oRigidbody2D.velocity.y);
+                StartCoroutine(IsPunching());
+            }else{
+                oAnimator.SetTrigger("isPunching"); //Mudar pra animção de airpunch
+                oRigidbody2D.velocity = Vector2.zero;
+                StartCoroutine(IsAirPunching());
+            }
         }
     }
 
-    private IEnumerator ResetPunch()
+    private IEnumerator IsPunching()
     {
-        // Espere a duração da animação de soco (ajuste o tempo conforme necessário)
+        canMove = false;
+        isPunching = true;
         yield return new WaitForSeconds(oAnimator.GetCurrentAnimatorStateInfo(0).length);
-
         isPunching = false;
-        canPunch = true;
+        canMove = true;
     }
 
-    private void CronometroDeAtaque()
+    private IEnumerator IsAirPunching()
     {
-        tempoAtualEntreAtaques -= Time.deltaTime;       //time.deltatime permite controlar melhor o framerate e descontar x segundos a cada segundo
-
-        if (tempoAtualEntreAtaques <= 0)
-        {
-            canPunch = true;
-            tempoAtualEntreAtaques = tempoMaxEntreAtaques;
-        }
+        canMove = false;
+        isPunching = true;
+        oRigidbody2D.gravityScale = 0;
+        yield return new WaitForSeconds(oAnimator.GetCurrentAnimatorStateInfo(0).length);
+        oRigidbody2D.gravityScale = 4;
+        isPunching = false;
+        canMove = true;
     }
 
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Ground"))
         {
-            canJump = true;
+            oAnimator.SetTrigger("isIdle");
+            onAir = false;
         }
     }
 
@@ -151,7 +147,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Ground"))
         {
-            canJump = false;
+            onAir = true;
         }
     }
 }

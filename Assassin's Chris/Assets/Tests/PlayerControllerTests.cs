@@ -20,8 +20,8 @@ public class PlayerControllerTests
 
         // Configura os parâmetros do PlayerController
         playerController.SetPlayerSpeed(5f);
-        playerController.SetMinX(-10f);
-        playerController.SetMaxX(10f);
+        playerController.SetXBounds(new(-10, 10));
+        playerController.SetYBounds(new(-10, 10));
         playerController.SetJumpForce(5f);
     }
 
