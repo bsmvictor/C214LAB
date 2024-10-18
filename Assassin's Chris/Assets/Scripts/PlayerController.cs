@@ -7,7 +7,6 @@ public class PlayerController : MonoBehaviour
 {
     [Header("General References")]                          //headers para ajudar na organizaçao de variaveis do ponto de vista do unity
     private Rigidbody2D oRigidbody2D;
-    private AnimationController animation;
     private Animator oAnimator;
 
     [Header("Player Movement")]
@@ -22,6 +21,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float tempoMaxEntreAtaques;
     private float tempoAtualEntreAtaques;
     private bool canPunch = true;
+    private bool isPunching = false;
     
     [Header("Player Limits")]
     [SerializeField] private float maxX;
@@ -31,20 +31,26 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         oRigidbody2D = GetComponent<Rigidbody2D>();
-        animation = GetComponent<AnimationController>();
         oAnimator = GetComponent<Animator>();
     }
     
     void Update()
     {
-        PlayerMovement();
-        EspelharPlayer();
         Bater();
         CronometroDeAtaque();
+        
+        if (!isPunching)
+        {
+            PlayerMovement();
+        }
+            
+        
     }
     
     private void PlayerMovement()
     {
+        
+        EspelharPlayer();
         // Armazena a direção que o jogador define
         horizontalInput = Input.GetAxisRaw("Horizontal");
         oRigidbody2D.velocity = new Vector2(horizontalInput * playerSpeed, oRigidbody2D.velocity.y);
@@ -85,14 +91,27 @@ public class PlayerController : MonoBehaviour
 
     private void Bater()
     {
-        if (Input.GetButtonDown("Fire1") && canJump && canPunch)
+        if (Input.GetButtonDown("Fire1") && canJump && canPunch && !isPunching)
         {
-            oAnimator.SetTrigger("isPunching");   
+            oAnimator.SetTrigger("isPunching");  
+            isPunching = true;
             canPunch = false;
+            
+            oRigidbody2D.velocity = Vector2.zero;
 
-            //tem que fazer o boneco parar quando bater
+            // Chame uma coroutine para esperar o tempo da animação de soco e liberar a movimentação novamente
+            StartCoroutine(ResetPunch());
 
         }
+    }
+    
+    private IEnumerator ResetPunch()
+    {
+        // Espere a duração da animação de soco (ajuste o tempo conforme necessário)
+        yield return new WaitForSeconds(oAnimator.GetCurrentAnimatorStateInfo(0).length);
+    
+        isPunching = false;
+        canPunch = true;
     }
 
     private void CronometroDeAtaque()
