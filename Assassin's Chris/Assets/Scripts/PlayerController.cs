@@ -71,6 +71,9 @@ public class PlayerController : MonoBehaviour
         {
             oRigidbody2D.velocity = new Vector2(oRigidbody2D.velocity.x, jumpForce);
             canJump = false;
+
+            //animação de pulo
+            oAnimator.SetTrigger("isJumping");
         }
     }
 
