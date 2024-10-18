@@ -135,7 +135,8 @@ GameObject:
   - component: {fileID: 466754514}
   - component: {fileID: 466754513}
   - component: {fileID: 466754516}
-  m_Layer: 0
+  - component: {fileID: 466754517}
+  m_Layer: 8
   m_Name: Inimigo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -174,18 +175,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.101019144, y: -0.06657255}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 12.44, y: 16}
-    newSize: {x: 12.44, y: 16}
+    oldSize: {x: 1.625, y: 1.5625}
+    newSize: {x: 1.625, y: 1.5625}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 12.44, y: 16}
+  m_Size: {x: 1.4389167, y: 1.4669602}
   m_EdgeRadius: 0
 --- !u!212 &466754514
 SpriteRenderer:
@@ -227,13 +228,13 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: fa02d039cf2d91a46b1acdd6c7066f97, type: 3}
+  m_SortingOrder: 1
+  m_Sprite: {fileID: 1139003559, guid: 43e436c3f9e78e04f8f07a52ea1fe0cf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 12.44, y: 16}
+  m_Size: {x: 1.625, y: 1.5625}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -248,8 +249,8 @@ Transform:
   m_GameObject: {fileID: 466754511}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.14, y: -2.88, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_LocalPosition: {x: 6.38, y: -3.42, z: 0}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -266,6 +267,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c9fb82b1efc30d4b9fcbd0e84d7cb2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &466754517
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466754511}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 11ab5f085bb42bd4d92c192ee6d1c528, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -534,7 +556,7 @@ GameObject:
   - component: {fileID: 1422923294}
   - component: {fileID: 1422923299}
   - component: {fileID: 1422923300}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -555,7 +577,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerSpeed: 5
   jumpForce: 18
-  tempoMaxEntreAtaques: 1
+  tempoMaxEntreAtaques: 0.7
   maxX: 8.87
   minX: -8.87
   maxY: 4.3
@@ -671,7 +693,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: -1044606391, guid: 3d02248335f68cd4a9cadb103241fca5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -742,9 +764,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1462252146}
   - component: {fileID: 1462252147}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ColisorSoco
-  m_TagString: Untagged
+  m_TagString: Soco
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
