@@ -7,15 +7,15 @@ public class PlayerController : MonoBehaviour
 {
     [HideInInspector]
     private Rigidbody2D oRigidbody2D;
-    private Animator oAnimator;
+    public Animator oAnimator;
 
     [Space]
     [Header("Stats")]
-    public float playerSpeed = 10; 
+    public float playerSpeed = 10;
     public float jumpForce = 50;
     public float fallMult = 1.5f;
-    public Vector2 X_bounds = new(-10,10);
-    public Vector2 Y_bounds = new(-10,10);
+    public Vector2 X_bounds = new(-10, 10);
+    public Vector2 Y_bounds = new(-10, 10);
 
     [Space]
     [Header("Booleans")]
@@ -52,11 +52,11 @@ public class PlayerController : MonoBehaviour
             PlayerMovement();
         }
 
-        if(oRigidbody2D.velocity.y < 0)
+        if (oRigidbody2D.velocity.y < 0)
         {
             oRigidbody2D.velocity += Physics2D.gravity.y * fallMult * Time.deltaTime * Vector2.up;
         }
-        else if(oRigidbody2D.velocity.y > 0 && !Input.GetButton("Jump"))
+        else if (oRigidbody2D.velocity.y > 0 && !Input.GetButton("Jump"))
         {
             oRigidbody2D.velocity += Physics2D.gravity.y * Time.deltaTime * Vector2.up;
         }
@@ -77,7 +77,7 @@ public class PlayerController : MonoBehaviour
     {
         // Armazena a direção que o jogador define
         float horizontalInput = Input.GetAxisRaw("Horizontal");
-            oRigidbody2D.velocity = new Vector2(horizontalInput * playerSpeed, oRigidbody2D.velocity.y);
+        oRigidbody2D.velocity = new Vector2(horizontalInput * playerSpeed, oRigidbody2D.velocity.y);
 
         if (horizontalInput == 0)
         {
@@ -133,22 +133,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Bater()
+    public void Bater()
     {
         if (isPunching)
         {
-                if (!onAir)
-                {
-                    oAnimator.SetTrigger("isPunching");
-                    oRigidbody2D.velocity = new(0, oRigidbody2D.velocity.y);
-                    StartCoroutine(IsPunching());
-                }
-                else
-                {
-                    //oAnimator.SetTrigger("isPunching"); //Mudar pra animção de airpunch
-                    //oRigidbody2D.velocity = Vector2.zero;
-                    //StartCoroutine(IsAirPunching());
-                }
+            if (!onAir)
+            {
+                oAnimator.SetTrigger("isPunching");
+                oRigidbody2D.velocity = new(0, oRigidbody2D.velocity.y);
+                StartCoroutine(IsPunching());
+            }
+            else
+            {
+                //oAnimator.SetTrigger("isPunching"); //Mudar pra animção de airpunch
+                //oRigidbody2D.velocity = Vector2.zero;
+                //StartCoroutine(IsAirPunching());
+            }
         }
     }
 

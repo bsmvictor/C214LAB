@@ -17,6 +17,7 @@ public class PlayerControllerTests
         player = new GameObject();
         playerController = player.AddComponent<PlayerController>();
         oRigidbody2D = player.AddComponent<Rigidbody2D>();
+        playerController.oAnimator = player.AddComponent<Animator>();
 
         // Configura os parâmetros do PlayerController
         playerController.SetPlayerSpeed(5f);
@@ -36,6 +37,22 @@ public class PlayerControllerTests
 
         // Assert
         Assert.IsTrue(playerController.isJumping);  // Verifica se o jogador está pulando
+    }
+
+    [Test]
+    public void TestInputBater()
+    {
+        // Arrange - setup
+        playerController.canPunch = true;
+        playerController.isPunching = false;
+
+        // Act - Simula que a tecla de soco foi pressionada
+        playerController.InputPunch(true);
+        playerController.Bater();  // Certifica que a lógica do soco é processada
+
+        // Assert
+        Assert.IsTrue(playerController.isPunching);  // Verifica se o jogador está batendo
+        Assert.IsFalse(playerController.canPunch);  // Verifica se o jogador não pode socar enquanto o soco está ativo
     }
 
 }
