@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     private float tempoAtualEntreAtaques;
     private bool canPunch = true;
     private bool isPunching = false;
-    
+
     [Header("Player Limits")]
     [SerializeField] private float maxX;
     [SerializeField] private float minX;
@@ -44,44 +44,47 @@ public class PlayerController : MonoBehaviour
         oRigidbody2D = GetComponent<Rigidbody2D>();
         oAnimator = GetComponent<Animator>();
     }
-    
+
     void Update()
     {
         Bater();
         CronometroDeAtaque();
-        
+
         if (!isPunching)
         {
             PlayerMovement();
         }
-            
-        
+
+
     }
-    
+
     private void PlayerMovement()
     {
-        
+
         EspelharPlayer();
         // Armazena a direção que o jogador define
         horizontalInput = Input.GetAxisRaw("Horizontal");
         oRigidbody2D.velocity = new Vector2(horizontalInput * playerSpeed, oRigidbody2D.velocity.y);
 
-        if(horizontalInput == 0)
+        if (horizontalInput == 0)
         {
             oAnimator.SetTrigger("isIdle");
         }
         else
         {
-            oAnimator.SetTrigger("isWalking"); 
+            oAnimator.SetTrigger("isWalking");
         }
-        
+
         //limita movimentaçao do player
         oRigidbody2D.position = new Vector2(Mathf.Clamp(oRigidbody2D.position.x, minX, maxX), oRigidbody2D.position.y);
-        
+
         if (Input.GetKeyDown(KeyCode.Space) && canJump)
         {
             oRigidbody2D.velocity = new Vector2(oRigidbody2D.velocity.x, jumpForce);
             canJump = false;
+
+            //animação de pulo
+            oAnimator.SetTrigger("isJumping");
         }
     }
 
@@ -104,10 +107,10 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetButtonDown("Fire1") && canJump && canPunch && !isPunching)
         {
-            oAnimator.SetTrigger("isPunching");  
+            oAnimator.SetTrigger("isPunching");
             isPunching = true;
             canPunch = false;
-            
+
             oRigidbody2D.velocity = Vector2.zero;
 
             // Chame uma coroutine para esperar o tempo da animação de soco e liberar a movimentação novamente
@@ -115,12 +118,12 @@ public class PlayerController : MonoBehaviour
 
         }
     }
-    
+
     private IEnumerator ResetPunch()
     {
         // Espere a duração da animação de soco (ajuste o tempo conforme necessário)
         yield return new WaitForSeconds(oAnimator.GetCurrentAnimatorStateInfo(0).length);
-    
+
         isPunching = false;
         canPunch = true;
     }
@@ -143,7 +146,7 @@ public class PlayerController : MonoBehaviour
             canJump = true;
         }
     }
-    
+
     private void OnCollisionExit2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Ground"))
