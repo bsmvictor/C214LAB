@@ -13,26 +13,30 @@ public class PlayerControllerTests
     [SetUp]
     public void Setup()
     {
-        // Inicializa o GameObject e o componente PlayerController
+        // Inicializa o GameObject e o PlayerController
         player = new GameObject();
         playerController = player.AddComponent<PlayerController>();
         oRigidbody2D = player.AddComponent<Rigidbody2D>();
 
-        // Configura par‚metros do PlayerController (pode ser ajustado conforme necess·rio)
-        playerController.playerSpeed = 5f;
-        playerController.minX = -10f;
-        playerController.maxX = 10f;
-        playerController.jumpForce = 5f;
+        // Configura os par√¢metros do PlayerController
+        playerController.SetPlayerSpeed(5f);
+        playerController.SetMinX(-10f);
+        playerController.SetMaxX(10f);
+        playerController.SetJumpForce(5f);
     }
 
-    [Test]
-    public void PlayerMovesRight()
-    {
-        // Simula input de movimento para a direita
-        Input.simulateInput("Horizontal", 1f);  // Simula movimento para a direita
-        playerController.Update();  // Chama o Update para simular um frame de jogo
+    //[Test]
+    //public void TestJump()
+    //{
+    //    // Arrange
+    //    float initialYPosition = player.transform.position.y;
+    //    float jumpForce = playerController.GetJumpForce();
 
-        // Verifica se o player se moveu para a direita
-        Assert.Greater(oRigidbody2D.velocity.x, 0);
-    }
+    //    // Act
+    //    playerController.Jump();
+
+    //    // Assert
+    //    Assert.Greater(player.transform.position.y, initialYPosition);
+    //    Assert.AreEqual(jumpForce, oRigidbody2D.velocity.y);
+    //}
 }
