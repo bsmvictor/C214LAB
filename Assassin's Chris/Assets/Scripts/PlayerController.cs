@@ -1,185 +1,152 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [HideInInspector]
-    private Rigidbody2D oRigidbody2D;
+    public Rigidbody2D oRigidbody2D;
     public Animator oAnimator;
 
-    [Space]
     [Header("Stats")]
-    public float playerSpeed = 10;
-    public float jumpForce = 50;
+    public float playerSpeed = 10f;
+    public float jumpForce = 50f;
     public float fallMult = 1.5f;
     public Vector2 X_bounds = new(-10, 10);
     public Vector2 Y_bounds = new(-10, 10);
 
-    [Space]
     [Header("Booleans")]
-    public bool canMove;
-    public bool canPunch;
-    public bool isPunching;
-    public bool isJumping;
-    public bool onAir = false;
+    public bool canMove = true;
+    public bool canPunch = true;
+    public bool canJump = true;
+    public bool isMoving = false;
+    public bool isPunching = false;
+    public bool isJumping = false;
 
-    // Setters
-    public void SetPlayerSpeed(float speed) => playerSpeed = speed;
-    public void SetJumpForce(float force) => jumpForce = force;
-    public void SetXBounds(Vector2 xBounds) => X_bounds = xBounds;
-    public void SetYBounds(Vector2 yBounds) => Y_bounds = yBounds;
+    private Vector2 moveAmount;
 
-    //Getters
-
-    public float GetPlayerSpeed() => playerSpeed;
-    public float GetJumpForce() => jumpForce;
-    public Vector2 GetXBounds() => X_bounds;
-    public Vector2 GetYBounds() => Y_bounds;
-
-    void Start()
+    private void Start()
     {
         oRigidbody2D = GetComponent<Rigidbody2D>();
         oAnimator = GetComponent<Animator>();
     }
 
-    void Update()
+    private void Update()
     {
-        Bater();
-        if (!isPunching)
-        {
-            PlayerMovement();
-        }
+        if (canMove)
+        PerformMovement();
 
-        if (oRigidbody2D.velocity.y < 0)
-        {
-            oRigidbody2D.velocity += Physics2D.gravity.y * fallMult * Time.deltaTime * Vector2.up;
-        }
-        else if (oRigidbody2D.velocity.y > 0 && !Input.GetButton("Jump"))
-        {
-            oRigidbody2D.velocity += Physics2D.gravity.y * Time.deltaTime * Vector2.up;
-        }
-
-        // Verifica o input da tecla de pulo
-        bool isJumpKeyPressed = Input.GetKeyDown(KeyCode.Space);
-
-        // Passa o valor da tecla pressionada para o método InputJump
-        InputJump(isJumpKeyPressed);
-
-        bool isPunchKeyPressed = Input.GetButtonDown("Fire1");
-
-        InputPunch(isPunchKeyPressed);
-
+        if(canPunch && isPunching)
+        PerformPunch();
     }
 
-    private void PlayerMovement()
+    // Método que controla a movimentação do jogador
+    private void PerformMovement()
     {
-        // Armazena a direção que o jogador define
-        float horizontalInput = Input.GetAxisRaw("Horizontal");
-        oRigidbody2D.velocity = new Vector2(horizontalInput * playerSpeed, oRigidbody2D.velocity.y);
+        // Confirma a movimentação do player
+        isMoving = true;
 
-        if (horizontalInput == 0)
+        // Usa o movimento do eixo X para o movimento horizontal e preserva a velocidade vertical
+        oRigidbody2D.linearVelocity = new Vector2(moveAmount.x * playerSpeed, oRigidbody2D.linearVelocity.y);
+
+        // Define a animação dependendo do movimento horizontal
+        if (moveAmount.x == 0)
         {
             oAnimator.SetTrigger("isIdle");
         }
         else
         {
             oAnimator.SetTrigger("isWalking");
+
+            // Adiciona o flip da sprite para a direção que o jogador está se movendo
+            if (moveAmount.x > 0) // Movendo para a direita
+            {
+                transform.localScale = new Vector3(1f, 1f, 1f); // Normal
+            }
+            else if (moveAmount.x < 0) // Movendo para a esquerda
+            {
+                transform.localScale = new Vector3(-1f, 1f, 1f); // Inverte no eixo X
+            }
         }
 
-        //limita movimentaçao do player
+        // Limita a posição do jogador dentro dos limites definidos para o eixo X
         oRigidbody2D.position = new Vector2(Mathf.Clamp(oRigidbody2D.position.x, X_bounds.x, X_bounds.y), oRigidbody2D.position.y);
-
-        Jump();
-
-        //Espelhar
-        if (horizontalInput > 0)
-        {
-            transform.localScale = new Vector3(1f, 1f, 1f);
-        }
-        else if (horizontalInput < 0)
-        {
-            transform.localScale = new Vector3(-1f, 1f, 1f);
-        }
     }
 
-    public void InputJump(bool isJumpKeyPressed)
+    // Função que controla o pulo
+    private void PerformJump()
     {
-        if (isJumpKeyPressed && !onAir)
-        {
-            isJumping = true;
-        }
-    }
-
-
-
-    public void Jump()
-    {
-        if (isJumping)
-        {
-            oRigidbody2D.velocity = new Vector2(oRigidbody2D.velocity.x, jumpForce);
-            onAir = true;
-            oAnimator.SetTrigger("isJumping");
-            isJumping = false;
-        }
-    }
-
-    public void InputPunch(bool isPunchKeyPressed)
-    {
-        if (isPunchKeyPressed && canPunch && !isPunching)
-        {
-            isPunching = true;
-        }
-    }
-
-    public void Bater()
-    {
-        if (isPunching)
-        {
-            if (!onAir)
-            {
-                oAnimator.SetTrigger("isPunching");
-                oRigidbody2D.velocity = new(0, oRigidbody2D.velocity.y);
-                StartCoroutine(IsPunching());
-            }
-            else
-            {
-                //oAnimator.SetTrigger("isPunching"); //Mudar pra animção de airpunch
-                //oRigidbody2D.velocity = Vector2.zero;
-                //StartCoroutine(IsAirPunching());
-            }
-        }
-    }
-
-    private IEnumerator IsPunching()
-    {
-        canMove = false;
-        isPunching = true;
+        // Aplica o movimento de pulo e altera o estado de animação
+        oRigidbody2D.linearVelocity = new Vector2(oRigidbody2D.linearVelocity.x, jumpForce);
+        isJumping = true;
+        canJump = false;
         canPunch = false;
-        yield return new WaitForSeconds(oAnimator.GetCurrentAnimatorStateInfo(0).length);
-        isPunching = false;
-        canMove = true;
-        canPunch = true;
+        oAnimator.SetTrigger("isJumping");
     }
 
-    private IEnumerator IsAirPunching()
+    // Função que controla o soco
+    private void PerformPunch()
     {
-        canMove = false;
+        // Aplica o soco e atualiza o estado
+        oAnimator.SetTrigger("isPunching");
+        oRigidbody2D.linearVelocity = new Vector2(0, oRigidbody2D.linearVelocity.y); // Zera o movimento no eixo X
         isPunching = true;
-        oRigidbody2D.gravityScale = 0;
-        yield return new WaitForSeconds(oAnimator.GetCurrentAnimatorStateInfo(0).length);
-        oRigidbody2D.gravityScale = 4;
-        isPunching = false;
-        canMove = true;
+        isMoving = false;
+        canPunch = false;
+        canMove = false;
+        canJump = false;
+
+        // Inicia a coroutine para resetar o soco
+        StartCoroutine(ResetPunch());
     }
+
+    // Coroutine para resetar o soco
+    public IEnumerator ResetPunch()
+    {
+        yield return new WaitForSeconds(1.0f); // Tempo da animação de soco
+        isPunching = false;
+        canPunch = true;
+        canMove = true;
+        canJump = true;
+    }
+
+    // Input System Callback for Movement
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        // Lê o valor float do eixo horizontal (esquerda/direita)
+        float horizontalMovement = context.ReadValue<float>();
+
+        // Define o movimento no eixo X e zera o movimento no eixo Y
+        moveAmount = new Vector2(horizontalMovement, 0);
+    }
+
+    // Input System Callback for Jump
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        // Somente permite o pulo se a ação for "performed" e o jogador não estiver pulando
+        if (context.performed && !isJumping)
+        {
+            PerformJump(); // Chama a função de pulo separada
+        }
+    }
+
+    // Input System Callback for Punch
+    public void OnPunch(InputAction.CallbackContext context)
+    {
+        // Somente permite o soco se a ação for "performed" e o jogador não estiver atacando
+        if (context.performed && !isPunching)
+        {
+            PerformPunch(); // Chama a função de soco separada
+        }
+    }
+
 
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Ground"))
         {
             oAnimator.SetTrigger("isIdle");
-            onAir = false;
+            isJumping = false;
+            canJump = true;
         }
     }
 
@@ -187,7 +154,8 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Ground"))
         {
-            onAir = true;
+            isJumping = true;
+            canJump = false;
         }
     }
 }
