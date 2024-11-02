@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     public Rigidbody2D oRigidbody2D;
     public Animator oAnimator;
+    public PlayerInput playerInput;
 
     [Header("Stats")]
     public float playerSpeed = 10f;
@@ -21,8 +22,19 @@ public class PlayerController : MonoBehaviour
     public bool isMoving = false;
     public bool isPunching = false;
     public bool isJumping = false;
+    public bool isJumpPressed = false;
 
     private Vector2 moveAmount;
+
+    private void Awake()
+    {
+        playerInput = new PlayerInput();
+
+        // Adiciona os callbacks para os inputs
+        playerInput.PlayerControls.Jump.started += OnJump;
+        playerInput.PlayerControls.Jump.canceled += OnJump;
+
+    }
 
     private void Start()
     {
@@ -33,20 +45,29 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         if (canMove)
-        PerformMovement();
+            PerformMovement();
 
-        if(canPunch && isPunching)
-        PerformPunch();
+        if (canPunch && isPunching)
+        {
+            PerformPunch();
+        }
     }
 
     // Método que controla a movimentação do jogador
-    private void PerformMovement()
+    public void PerformMovement()
     {
+        // Verifica se o jogador pode se mover
+        if (!canMove)
+        {
+            isMoving = false; // Garante que isMoving continue falso
+            return; // Sai do método se canMove for false
+        }
+
         // Confirma a movimentação do player
         isMoving = true;
 
         // Usa o movimento do eixo X para o movimento horizontal e preserva a velocidade vertical
-        oRigidbody2D.linearVelocity = new Vector2(moveAmount.x * playerSpeed, oRigidbody2D.linearVelocity.y);
+        oRigidbody2D.linearVelocity = new Vector2(moveAmount.x * playerSpeed, oRigidbody2D.linearVelocityY);
 
         // Define a animação dependendo do movimento horizontal
         if (moveAmount.x == 0)
@@ -73,22 +94,50 @@ public class PlayerController : MonoBehaviour
     }
 
     // Função que controla o pulo
-    private void PerformJump()
+    public void PerformJump()
     {
+        // Verifica se o jogador pode pular
+        if (!canJump)
+        {
+            isJumping = false; // Garante que isJumping continue falso
+            return; // Sai do método se canJump for false
+        }
+
         // Aplica o movimento de pulo e altera o estado de animação
-        oRigidbody2D.linearVelocity = new Vector2(oRigidbody2D.linearVelocity.x, jumpForce);
+        oRigidbody2D.linearVelocity = new Vector2(oRigidbody2D.linearVelocityX, jumpForce);
         isJumping = true;
         canJump = false;
         canPunch = false;
         oAnimator.SetTrigger("isJumping");
+
+        // Inicia a coroutine para restaurar `canPunch` após o pulo
+        StartCoroutine(ResetJump());
     }
 
-    // Função que controla o soco
-    private void PerformPunch()
+    // Coroutine para restaurar `canPunch` após o pulo
+    private IEnumerator ResetJump()
     {
+        // Espera um pequeno tempo para simular a duração do pulo (ajuste conforme necessário)
+        yield return new WaitForSeconds(0.5f);
+
+        // Restaura `canPunch` ao final do pulo
+        canPunch = true;
+    }
+
+
+    // Função que controla o soco
+    public void PerformPunch()
+    {
+        // Verifica se o jogador pode socar
+        if (!canPunch)
+        {
+            isPunching = false; // Garante que isPunching continue falso
+            return; // Sai do método se canPunch for false
+        }
+
         // Aplica o soco e atualiza o estado
         oAnimator.SetTrigger("isPunching");
-        oRigidbody2D.linearVelocity = new Vector2(0, oRigidbody2D.linearVelocity.y); // Zera o movimento no eixo X
+        oRigidbody2D.linearVelocity = new Vector2(0, oRigidbody2D.linearVelocityY); // Zera o movimento no eixo X
         isPunching = true;
         isMoving = false;
         canPunch = false;
@@ -98,6 +147,7 @@ public class PlayerController : MonoBehaviour
         // Inicia a coroutine para resetar o soco
         StartCoroutine(ResetPunch());
     }
+
 
     // Coroutine para resetar o soco
     public IEnumerator ResetPunch()
@@ -122,8 +172,10 @@ public class PlayerController : MonoBehaviour
     // Input System Callback for Jump
     public void OnJump(InputAction.CallbackContext context)
     {
-        // Somente permite o pulo se a ação for "performed" e o jogador não estiver pulando
-        if (context.performed && !isJumping)
+        isJumpPressed = context.ReadValueAsButton();
+
+        // Verifica se o botão de pulo está pressionado e se o pulo é permitido
+        if (isJumpPressed && canJump)
         {
             PerformJump(); // Chama a função de pulo separada
         }
@@ -140,7 +192,7 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    private void OnCollisionEnter2D(Collision2D other)
+    public void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Ground"))
         {
@@ -150,7 +202,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnCollisionExit2D(Collision2D other)
+    public void OnCollisionExit2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Ground"))
         {

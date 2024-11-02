@@ -1,23 +1,23 @@
 {
-    "name": "PlayerInputActions",
+    "name": "PlayerInput",
     "maps": [
         {
-            "name": "Player",
-            "id": "144c781b-67ad-49ac-8fc8-50f68130e1c6",
+            "name": "PlayerControls",
+            "id": "271e0136-60f4-4a23-ab2c-5a667b977f83",
             "actions": [
                 {
-                    "name": "Movement",
-                    "type": "Value",
-                    "id": "d4412e85-d5d4-46f9-94a9-46cb807b6c3d",
-                    "expectedControlType": "Axis",
+                    "name": "Move",
+                    "type": "Button",
+                    "id": "a3baf5cd-a77a-4661-b925-0990a88240f2",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Jump",
                     "type": "Button",
-                    "id": "dd21617b-6e01-40de-945e-8b7342f0639a",
+                    "id": "6bdade8c-b53d-44cd-a5a4-dfc19b5970b3",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -26,7 +26,7 @@
                 {
                     "name": "Punch",
                     "type": "Button",
-                    "id": "53417d28-4c18-48dc-b72c-10417062a0a2",
+                    "id": "5c3661ea-8b87-4d3f-bdad-e5db4edfc9ef",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -36,40 +36,40 @@
             "bindings": [
                 {
                     "name": "1D Axis",
-                    "id": "4a7dc666-aa0b-41a6-bf40-387feb1d68b6",
+                    "id": "e7b45dcc-1666-4dc3-a79a-48bec23f9d1b",
                     "path": "1DAxis",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Movement",
+                    "action": "Move",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "negative",
-                    "id": "08417780-26c6-4272-b093-57e454109d79",
+                    "id": "4ae90ab3-0073-48f2-b270-d85b5462799f",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Movement",
+                    "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
                     "name": "positive",
-                    "id": "cc7b3348-b598-4300-a4ec-841db62498f0",
+                    "id": "0743929b-9bdd-46ed-879b-aab1dc3c8d19",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Movement",
+                    "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
                     "name": "",
-                    "id": "e588d2fe-d27c-4826-bb2c-5bc182a02ce9",
+                    "id": "34d6af13-980d-468c-a631-dabe350297d6",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
@@ -80,8 +80,8 @@
                 },
                 {
                     "name": "",
-                    "id": "b5ac4a3f-eb31-4f28-9c27-d82977901321",
-                    "path": "<Mouse>/leftButton",
+                    "id": "ae69bd0f-5469-42b1-bbf1-d2d1ddcc8fd0",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -91,7 +91,7 @@
                 },
                 {
                     "name": "",
-                    "id": "c7d33167-96ab-4396-93f7-225fd62578e0",
+                    "id": "5440fb9c-7ec2-49a2-b8a1-75c635dd2260",
                     "path": "<Keyboard>/shift",
                     "interactions": "",
                     "processors": "",
