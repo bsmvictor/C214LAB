@@ -3,32 +3,28 @@ using NUnit.Framework;
 using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
 public class PlayModeTests : InputTestFixture
 {
+
+    
     [UnityTest]
     public IEnumerator HitSpaceAndJump()
     {
-        // Criação do GameObject e componentes
-        var gameObject = new GameObject();
-        var animator = gameObject.AddComponent<Animator>();
-        gameObject.AddComponent<Rigidbody2D>();
-        var playerController = gameObject.AddComponent<PlayerController>();
-
-        // Adiciona um controlador de animação vazio para evitar erros
-        var animatorController = new AnimatorController();
-        animator.runtimeAnimatorController = animatorController;
+        SceneManager.LoadScene("SampleScene");
+        yield return null;  
         
-        // Configura o sistema de entrada e simula o pressionamento da tecla espaço
+        var player = GameObject.FindWithTag("Player"); 
+        Assert.IsNotNull(player, "O jogador não foi encontrado na cena de teste.");
+        
+        var playerController = player.GetComponent<PlayerController>();
         var keyboard = InputSystem.AddDevice<Keyboard>();
+        
         Press(keyboard.spaceKey);
-        InputSystem.Update();
-
-        // Aguarda um quadro para que a entrada seja processada
-        yield return null;
-
-        // Verifica se o player pode pular após pressionar a tecla espaço
-        Assert.IsTrue(playerController.canJump, "Esperado que o jogador pudesse pular, mas não foi possível.");
+        yield return new WaitForFixedUpdate(); 
+        
+        Assert.IsTrue(playerController.isJumping, "Esperado que o jogador esteja pulando.");
     }
 }
