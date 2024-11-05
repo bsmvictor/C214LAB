@@ -23,4 +23,15 @@ class MyTests : InputTestFixture
 
     }
 
+    [Test]
+    public void TestPlayerCanPunch()
+    {
+        playerController.canPunch = true;
+        playerController.isPunching = false;
+
+        playerController.PerformPunch();
+
+        Assert.That(playerController.isPunching, Is.True);
+    }
+
 }
