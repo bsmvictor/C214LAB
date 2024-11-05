@@ -1,24 +1,34 @@
 using System.Collections;
 using NUnit.Framework;
+using UnityEditor.Animations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.TestTools;
 
-public class PlayModeTests
+public class PlayModeTests : InputTestFixture
 {
-    // A Test behaves as an ordinary method
-    [Test]
-    public void PlayModeTestsSimplePasses()
-    {
-        // Use the Assert class to test conditions
-    }
-
-    // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
-    // `yield return null;` to skip a frame.
     [UnityTest]
-    public IEnumerator PlayModeTestsWithEnumeratorPasses()
+    public IEnumerator HitSpaceAndJump()
     {
-        // Use the Assert class to test conditions.
-        // Use yield to skip a frame.
+        // Criação do GameObject e componentes
+        var gameObject = new GameObject();
+        var animator = gameObject.AddComponent<Animator>();
+        gameObject.AddComponent<Rigidbody2D>();
+        var playerController = gameObject.AddComponent<PlayerController>();
+
+        // Adiciona um controlador de animação vazio para evitar erros
+        var animatorController = new AnimatorController();
+        animator.runtimeAnimatorController = animatorController;
+        
+        // Configura o sistema de entrada e simula o pressionamento da tecla espaço
+        var keyboard = InputSystem.AddDevice<Keyboard>();
+        Press(keyboard.spaceKey);
+        InputSystem.Update();
+
+        // Aguarda um quadro para que a entrada seja processada
         yield return null;
+
+        // Verifica se o player pode pular após pressionar a tecla espaço
+        Assert.IsTrue(playerController.canJump, "Esperado que o jogador pudesse pular, mas não foi possível.");
     }
 }
