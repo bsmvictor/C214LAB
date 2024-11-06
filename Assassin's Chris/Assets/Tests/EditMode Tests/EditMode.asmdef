@@ -4,7 +4,11 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "GameAssembly"
+        "GameAssembly",
+        "Unity.InputSystem",
+        "Unity.InputSystem.TestFramework",
+        "Unity.InputSystem.IntegrationTests",
+        "Unity.InputSystem.ForUI"
     ],
     "includePlatforms": [
         "Editor"

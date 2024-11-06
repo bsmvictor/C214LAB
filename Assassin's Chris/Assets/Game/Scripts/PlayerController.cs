@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     public bool isJumping = false;
     public bool isJumpPressed = false;
 
-    private Vector2 moveAmount;
+    public Vector2 moveAmount;
 
     private void Awake()
     {

@@ -32,5 +32,17 @@ class PlayerControllerTests
 
         Assert.That(playerController.isPunching, Is.True);
     }
+    
+    [Test]
+    public void TestSpriteFlipRight()
+    {
+        var player = new GameObject("Player");
+        var spriteRenderer = player.AddComponent<SpriteRenderer>();
+
+        spriteRenderer.flipX = false;
+        Assert.IsFalse(spriteRenderer.flipX);
+    }
+    
+    
 
 }
