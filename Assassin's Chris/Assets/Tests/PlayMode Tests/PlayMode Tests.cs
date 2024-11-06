@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
-public class PlayModeTests : InputTestFixture
+public class PlayModeTest : InputTestFixture
 {
     
     [UnityTest] 
