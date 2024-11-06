@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
-public class PlayModeTest : InputTestFixture
+public class PlayModeInputTests : InputTestFixture
 {
     
     [UnityTest] 
@@ -104,13 +104,39 @@ public class PlayModeTest : InputTestFixture
         var keyboard = InputSystem.AddDevice<Keyboard>();
 
         Press(keyboard.dKey);
+        yield return new WaitForSeconds(0.3f);
         Assert.IsTrue(playerController.isMoving, "Esperado que o jogador esteja andando");
         Assert.IsTrue(playerController.canJump);
-        yield return new WaitForFixedUpdate();
         
+        Release(keyboard.dKey);
         Press(keyboard.spaceKey);
+        yield return new WaitForFixedUpdate();
         Assert.IsTrue(playerController.isJumping, "Esperado que o jogador esteja pulando.");
         Assert.IsFalse(playerController.canJump);
-        
+
     }
+    
+    [UnityTest]
+    public IEnumerator SpriteFlipTest()
+    {
+        SceneManager.LoadScene("SampleScene"); 
+        yield return null;
+        
+        var player = GameObject.FindWithTag("Player");
+
+        var playerController = player.GetComponent<PlayerController>();
+        var transform = player.GetComponent<Transform>();
+        var keyboard = InputSystem.AddDevice<Keyboard>();
+
+        Press(keyboard.dKey);
+        yield return new WaitForSeconds(0.3f);
+        Assert.IsTrue(transform.localScale.x > 0);
+
+        Release(keyboard.dKey);
+        Press(keyboard.aKey);
+        yield return new WaitForSeconds(0.3f); 
+        Assert.IsTrue(transform.localScale.x < 0);
+
+    }
+    
 }
