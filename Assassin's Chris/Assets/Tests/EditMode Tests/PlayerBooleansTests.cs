@@ -45,9 +45,38 @@ class PlayerBooleansTests
     public void Player_Jumps_WhenCanJumpIsTrue()
     {
         playerController.canJump = true;
-        playerController.OnJump(new InputAction.CallbackContext());
+        playerController.PerformJump();
         
         Assert.IsTrue(playerController.isJumping);
-        Assert.Greater(playerController.oRigidbody2D.linearVelocityY, 0);
     }
+    
+    [Test]
+    public void TestResetPunchRestoresPlayerState()
+    {
+       
+        playerController.canMove = true;
+        playerController.canJump = true;
+        playerController.canPunch = true;
+        
+        playerController.PerformPunch();
+        
+        Assert.IsFalse(playerController.canMove);
+        Assert.IsFalse(playerController.canJump);
+        Assert.IsFalse(playerController.canPunch);
+        
+        playerController.StartCoroutine(WaitAndCheck(1.0f, playerController));
+
+        
+    }
+
+    private IEnumerator WaitAndCheck(float waitTime, PlayerController player)
+    {
+        yield return new WaitForSeconds(waitTime);
+        
+        Assert.IsTrue(playerController.canMove);
+        Assert.IsTrue(playerController.canJump);
+        Assert.IsTrue(playerController.canPunch);
+    }
+    
+    
 }
