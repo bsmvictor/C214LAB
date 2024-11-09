@@ -1,0 +1,27 @@
+name: Unity CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Versao do unity
+      uses: game-ci/unity-installer@v2
+      with:
+        unityVersion: 6000.0.24f1
+    
+    - name: Ativar licença do Unity
+      uses: game-ci/unity-activate@v2
+      with:
+        unityLicense: ${{ secrets.UNITY_LICENSE }}
+
+    - name: Run Unity EditMode Tests
+      run: xvfb-run --auto-servernum --server-args="-screen 0 640x480x24" \
+          unity -projectPath . -runTests -testPlatform EditMode -logFile -
