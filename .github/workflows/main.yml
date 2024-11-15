@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         projectPath:
-          - Assassins's Chris
+          - C214LAB/Assassins's Chris
         testMode:
           - playmode
     steps:
