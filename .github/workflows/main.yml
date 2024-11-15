@@ -10,11 +10,9 @@ jobs:
       fail-fast: false
       matrix:
         projectPath:
-          - test-project
+          - Tests/PlayMode Tests
         testMode:
           - playmode
-          - editmode
-          - standalone
     steps:
       - uses: actions/checkout@v4
         with:
