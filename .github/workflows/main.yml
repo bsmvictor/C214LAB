@@ -10,10 +10,9 @@ jobs:
       fail-fast: false
       matrix:
         projectPath:
-          - Tests/PlayMode Tests
-          - Tests/EditMode Tests
+          - test-package
         testMode:
-          - playmode
+          - editmode
         unityVersion:
           - 6000.0.24f1
     steps:
