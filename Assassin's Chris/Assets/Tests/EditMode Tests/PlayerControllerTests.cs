@@ -42,7 +42,71 @@ class PlayerControllerTests
         spriteRenderer.flipX = false;
         Assert.IsFalse(spriteRenderer.flipX);
     }
-    
-    
+
+    [Test]
+    public void TestPlayerCanPunch()
+    {
+        playerController.canPunch = true;
+        playerController.isPunching = false;
+
+        playerController.PerformPunch();
+
+        Assert.That(playerController.isPunching, Is.True);
+    }
+
+    [Test]
+    public void TestPlayerCanJump()
+    {
+        playerController.canJump = true;
+        playerController.isJumping = false;
+
+        playerController.PerformJump();
+
+        Assert.That(playerController.isJumping, Is.True);
+    }
+
+    [Test]
+    public void TestPlayerCanMove()
+    {
+        playerController.canMove = true;
+        playerController.isMoving = false;
+
+        playerController.PerformMovement();
+
+        Assert.That(playerController.isMoving, Is.True);
+    }
+
+    [Test]
+    public void TestPlayerCantPunch()
+    {
+        playerController.canPunch = false;
+        playerController.isPunching = false;
+
+        playerController.PerformPunch();
+
+        Assert.That(playerController.isPunching, Is.False);
+    }
+
+    [Test]
+    public void TestPlayerCantJump()
+    {
+        playerController.canJump = false;
+        playerController.isJumping = false;
+
+        playerController.PerformJump();
+
+        Assert.That(playerController.isJumping, Is.False);
+    }
+
+    [Test]
+    public void TestPlayerCantMove()
+    {
+        playerController.canMove = false;
+        playerController.isMoving = false;
+
+        playerController.PerformMovement();
+
+        Assert.That(playerController.isMoving, Is.False);
+    }
 
 }
