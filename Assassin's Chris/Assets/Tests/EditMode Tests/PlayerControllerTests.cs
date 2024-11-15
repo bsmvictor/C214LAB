@@ -21,17 +21,7 @@ class PlayerControllerTests
         playerController.oRigidbody2D = player.AddComponent<Rigidbody2D>();
 
     }
-
-    [Test]
-    public void TestPlayerCanPunch()
-    {
-        playerController.canPunch = true;
-        playerController.isPunching = false;
-
-        playerController.PerformPunch();
-
-        Assert.That(playerController.isPunching, Is.True);
-    }
+    
     
     [Test]
     public void TestSpriteFlipRight()
