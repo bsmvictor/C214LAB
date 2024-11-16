@@ -47,7 +47,7 @@ jobs:
           uses: game-ci/unity-test-runner@v4
           id: testRunner
           with:
-            projectPath: Assassin's Chris
+            projectPath: "Assassin's Chris/."
             testMode: ${{ matrix.testMode }}
             checkName: ${{ matrix.testMode }} test results
             githubToken: ${{ secrets.GITHUB_TOKEN }}
