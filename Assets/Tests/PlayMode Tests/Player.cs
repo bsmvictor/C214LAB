@@ -22,7 +22,7 @@ public class PlayModeTests : InputTestFixture
         var keyboard = InputSystem.AddDevice<Keyboard>();
 
         Press(keyboard.spaceKey);
-        yield return new WaitForFixedUpdate();
+        yield return new WaitForSeconds(0.3f);
 
         Assert.IsTrue(playerController.isJumping, "Esperado que o jogador esteja pulando.");
     }
