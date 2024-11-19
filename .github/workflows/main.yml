@@ -1,9 +1,10 @@
 name: GameCI Test Runner 🎮
 
-on: push
+on: [push, pull_request]
 
 permissions:
   contents: read
+  actions: write
   checks: write
   pull-requests: write
 
@@ -65,3 +66,39 @@ jobs:
           with:
             name: Test results (${{ matrix.testMode }})
             path: ${{ steps.testRunner.outputs.artifactsPath }}
+
+    buildWebGL:
+      name: Build for WebGL 🚀💻
+      runs-on: ubuntu-latest
+      needs: [testRunner]
+      
+      
+      steps:
+        - uses: actions/checkout@v4
+          with:
+            lfs: true
+
+        - uses: actions/cache@v4
+          with:
+            path: Library
+            key: Library-WebGL-${{ github.sha }}
+            restore-keys: Library-WebGL-
+
+        - uses: game-ci/unity-builder@v4
+          env:
+            UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+            UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+            UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          with:
+            projectPath: "."
+            targetPlatform: WebGL
+            unityVersion: 6000.0.24f1
+            allowDirtyBuild: true 
+
+        - uses: actions/upload-artifact@v4
+          with:
+            name: Build-WebGL
+            path: build/WebGL
+
+        
+          
