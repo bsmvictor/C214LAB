@@ -173,13 +173,9 @@ jobs:
           run: mv build/WebGL/* ./
 
         - name: Deploy 🚀
-          env:
-            GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
-          run: |
-            git config user.name "bsmvictor"
-            git config user.email "victor.boaventura@gec.inatel.br"
-            git checkout -b gh-pages || git checkout gh-pages
-            git push -u origin gh-pages
-            git add . --force
-            git commit -m "Deploy WebGL build" || echo "No changes to commit"
-            git push origin gh-pages --force
+          uses: JamesIves/github-pages-deploy-action@v4
+          with:
+            branch: gh-pages
+            folder: .
+            clean: false
+            single-commit: true
