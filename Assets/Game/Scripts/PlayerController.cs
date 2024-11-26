@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     public Rigidbody2D oRigidbody2D;
     public Animator oAnimator;
     public PlayerInput playerInput;
+    public GameObject pause;
 
     [Header("Stats")]
     public float playerSpeed = 10f;
@@ -40,6 +41,12 @@ public class PlayerController : MonoBehaviour
     {
         oRigidbody2D = GetComponent<Rigidbody2D>();
         oAnimator = GetComponent<Animator>();
+    }
+
+    public void Update(){
+        if(!pause.activeSelf){
+            HandleUpdate();
+        }
     }
 
     public void HandleUpdate()
@@ -188,6 +195,16 @@ public class PlayerController : MonoBehaviour
         if (context.performed && !isPunching)
         {
             PerformPunch(); // Chama a função de soco separada
+        }
+    }
+
+    public void OnPause(InputAction.CallbackContext context){
+        if(context.performed){
+            if(pause.activeSelf){
+                pause.SetActive(false);
+            }else{
+                pause.SetActive(true);
+            }
         }
     }
 
