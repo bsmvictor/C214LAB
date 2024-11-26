@@ -156,26 +156,4 @@ jobs:
             name: Build-${{ matrix.targetPlatform }}
             path: build/${{ matrix.targetPlatform }}
 
-    deployPages:
-      needs: buildWebGL
-      name: Deploy to Github Pages 🚀
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
-
-        - uses: actions/download-artifact@v4
-          with:
-            name: build-WebGL
-            path: ./build
-        
-        - name: Move WebGL build to root
-          run: mv build/WebGL/* ./
-
-        - name: Deploy 🚀
-          uses: JamesIves/github-pages-deploy-action@v4
-          with:
-            branch: gh-pages
-            folder: .
-            clean: false
-            single-commit: true
+    
