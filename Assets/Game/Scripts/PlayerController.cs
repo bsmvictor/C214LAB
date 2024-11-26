@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
         oAnimator = GetComponent<Animator>();
     }
 
-    private void Update()
+    public void HandleUpdate()
     {
         if (canMove)
             PerformMovement();

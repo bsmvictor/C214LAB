@@ -6,13 +6,12 @@ using UnityEngine.SceneManagement;
 public class MainMenu: MonoBehaviour
 {
 
-    public Canvas canvas;
-    public Canvas canvasControle;
+    public GameObject MainOptions;
+    public GameObject Creds;
+    public GameObject Controls;
 
-    void Start()
-    {
-        canvas.enabled = true;
-        canvasControle.enabled = false;
+    public void Start(){
+        Voltar();
     }
 
     public void PlayGame()
@@ -22,19 +21,27 @@ public class MainMenu: MonoBehaviour
 
     public void QuitGame()
     {
-        Debug.Log("Quit");
         Application.Quit();
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #endif
+    }
+
+    public void Creditos(){
+        MainOptions.SetActive(false);
+        Creds.SetActive(true);
     }
 
     public void Controles()
     {
-        canvas.enabled = false;
-        canvasControle.enabled = true;
+        MainOptions.SetActive(false);
+        Controls.SetActive(true);
     }
 
     public void Voltar()
     {
-        canvas.enabled = true;
-        canvasControle.enabled = false;
+        Controls.SetActive(false);
+        Creds.SetActive(false);
+        MainOptions.SetActive(true);
     }
 }

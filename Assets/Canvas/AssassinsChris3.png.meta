@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      AssassinsChris3_0: -60383658444660299
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
