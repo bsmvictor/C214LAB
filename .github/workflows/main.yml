@@ -164,7 +164,7 @@ jobs:
           run: |
             curl -X POST \
             -H "Content-Type: application/json" \
-            -d '{"content": "✅ WebGL build completed successfully!"}' \
+            -d '{"content": "✅ WebGL build completed successfully! @all"}' \
             ${{ secrets.DISCORD_WEBHOOK_URL }} 
         
 
