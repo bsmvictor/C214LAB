@@ -166,7 +166,7 @@ jobs:
 
         - name: Install Butler
           run: |
-            curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
+            curl -L -o butler.zip https://github.com/itchio/butler/releases/latest/download/butler-linux-amd64.zip
             unzip butler.zip -d butler
             sudo mv butler/butler /usr/local/bin/
             butler -V
@@ -178,7 +178,7 @@ jobs:
             BUTLER_CREDENTIALS: ${{ secrets.ITCH_IO_API_KEY }}
 
     notifyDiscord:
-      needs: [buildWebGL, deployItchIO]
+      needs: deployItchIO
       runs-on: ubuntu-latest
       steps:
         - name: Notify Discord
