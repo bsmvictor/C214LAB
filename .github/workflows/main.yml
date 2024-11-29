@@ -156,15 +156,36 @@ jobs:
             name: Build-${{ matrix.targetPlatform }}
             path: build/${{ matrix.targetPlatform }}
 
-    notifyDiscord:
+    deployItchIO:
       needs: buildWebGL
+      name: Deploy to itch.io 🚀
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+        - uses: actions/checkout@v4
+
+        - name: Install Butler
+          run: |
+            curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
+            unzip butler.zip -d butler
+            sudo mv butler/butler /usr/local/bin/
+            butler -V
+
+        - name: Deploy to itch.io
+          run: |
+            butler push build/WebGL pedropassos87/assassinschris:web
+          env:
+            BUTLER_CREDENTIALS: ${{ secrets.ITCH_IO_API_KEY }}
+
+    notifyDiscord:
+      needs: [buildWebGL, deployItchIO]
       runs-on: ubuntu-latest
       steps:
         - name: Notify Discord
           run: |
             curl -X POST \
             -H "Content-Type: application/json" \
-            -d '{"content": "✅ WebGL build completed successfully! @everyone"}' \
+            -d '{"content": "✅ WebGL build completed successfully! Veja as atualizações em https://pedropassos87.itch.io/assassinschris @everyone"}' \
             ${{ secrets.DISCORD_WEBHOOK_URL }} 
         
 
