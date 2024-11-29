@@ -171,11 +171,12 @@ jobs:
             sudo mv butler/butler /usr/local/bin/
             butler -V
 
-        - name: Deploy to itch.io
+        - name: Install Butler
           run: |
-            butler push build/WebGL pedropassos87/assassinschris:web
-          env:
-            BUTLER_CREDENTIALS: ${{ secrets.ITCH_IO_API_KEY }}
+            curl -L -o butler.zip https://github.com/itchio/butler/releases/download/v15.21.0/butler-linux-amd64.zip
+            unzip butler.zip -d butler
+            sudo mv butler/butler /usr/local/bin/
+            butler -V
 
     notifyDiscord:
       needs: deployItchIO
