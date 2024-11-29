@@ -156,36 +156,9 @@ jobs:
             name: Build-${{ matrix.targetPlatform }}
             path: build/${{ matrix.targetPlatform }}
 
-    deployItchIO:
-      needs: buildWebGL
-      name: Deploy to itch.io 🚀
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
-
-        - name: Install Butler
-          run: |
-            curl -L -o butler.zip https://github.com/itchio/butler/releases/latest/download/butler-linux-amd64.zip
-            unzip butler.zip -d butler
-            sudo mv butler/butler /usr/local/bin/
-            butler -V
-
-        - name: Install Butler
-          run: |
-            curl -L -o butler https://broth.itch.ovh/butler/linux-amd64/latest
-            chmod +x butler
-            sudo mv butler /usr/local/bin/
-            butler -V 
-
-        - name: Deploy to itch.io
-          run: |
-            butler push build/WebGL pedropassos87/assassinschris:webgl --userversion $(date +%Y.%m.%d.%H.%M)
-          env:
-            BUTLER_CREDENTIALS: ${{ secrets.ITCH_IO_API_KEY }}
           
     notifyDiscord:
-      needs: deployItchIO
+      needs: buildWebGL
       runs-on: ubuntu-latest
       steps:
         - name: Notify Discord
