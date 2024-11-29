@@ -173,7 +173,7 @@ jobs:
 
         - name: Install Butler
           run: |
-            curl -L -o butler https://broth.itch.ovh/butler/linux-amd64/LATEST/butler
+            curl -L -o butler https://broth.itch.ovh/butler/linux-amd64/latest
             chmod +x butler
             sudo mv butler /usr/local/bin/
             butler -V 
