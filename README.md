@@ -33,8 +33,8 @@ AssassinsChris é um jogo desenvolvido em Unity como parte do projeto prático d
 - Ou baixe a versão disponível para seu sistema operacional nos artefatos do repositório
 
 ## Equipe
-[João Pedro Maciel] (https://github.com/Mysterion147)
-[Felipe Conrado](https://github.com/FConrado)
-[Victor Boaventura](https://github.com/bsmvictor)
-[Gabriel Alves](https://github.com/gAllves)
-[Pedro Passos](https://github.com/PedroPassos87)
+- [João Pedro Maciel](https://github.com/Mysterion147)
+- [Felipe Conrado](https://github.com/FConrado)
+- [Victor Boaventura](https://github.com/bsmvictor)
+- [Gabriel Alves](https://github.com/gAllves)
+- [Pedro Passos](https://github.com/PedroPassos87)
